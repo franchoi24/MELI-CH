@@ -7,13 +7,11 @@ class DnaStatRepository:
         self.session = session
 
     def get_all_stats(self) -> List[DnaStat]:
-        """Fetch all DNA stats from the database."""
         statement = select(DnaStat)
         results = self.session.exec(statement)
         return results.all()
 
     def count_mutants_and_humans(self):
-        """Count the number of mutants and humans."""
         mutants_count = self.session.exec(select(DnaStat).where(DnaStat.is_mutant == True)).all()
         humans_count = self.session.exec(select(DnaStat).where(DnaStat.is_mutant == False)).all()
 

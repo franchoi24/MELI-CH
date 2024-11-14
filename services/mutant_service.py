@@ -32,31 +32,41 @@ class MutantService:
         n = len(dna)
         m = len(dna[0])
 
-        # RIGHT
+        check_right = self._check_right(dna, n, m)
+        check_down = self._check_down(dna, n, m)
+        check_diag_right = self._check_diag_right(dna, n, m)
+        check_diag_left = self._check_diag_left(dna, n, m)
+
+        if check_right or check_down or check_diag_right or check_diag_left:
+            return True
+
+        return False
+    
+    def _check_right(self, dna: list[str], n: int, m: int) -> bool:
         for row in dna:
             for i in range(m - 3):
                 if len(set(row[i:i + 4])) == 1 and self._mutant_check():
                     return True
 
-        # DOWN
+    def _check_down(self, dna: list[str], n: int, m: int) -> bool:
         for col in range(m):
             for row in range(n - 3):
                 if len(set(dna[row + i][col] for i in range(4))) == 1 and self._mutant_check():
                     return True
-
-        # DIAG_RIGHT
+    
+    def _check_diag_right(self, dna: list[str], n: int, m: int) -> bool:
         for row in range(n - 3):
             for col in range(m - 3):
                 if len(set(dna[row + i][col + i] for i in range(4))) == 1 and self._mutant_check():
                     return True
- 
-        # DIAG_LEFT
+    
+    def _check_diag_left(self, dna: list[str], n: int, m: int) -> bool:
         for row in range(n - 3):
             for col in range(3, m):
                 if len(set(dna[row + i][col - i] for i in range(4))) == 1 and self._mutant_check():
                     return True
-        return False
-    
+
+
     def _mutant_check(self):
         with self.lock:
             if self.pattern_found == 1:
